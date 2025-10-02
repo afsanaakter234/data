@@ -1,0 +1,710 @@
+Flutter App Structure: Shikho EdTech Platform
+
+Complete Screen Flow & Architecture
+
+```
+lib/
+├── main.dart
+├── core/
+│   ├── constants/
+│   ├── themes/
+│   └── utils/
+├── models/
+├── providers/
+├── screens/
+│   ├── auth/
+│   ├── onboarding/
+│   ├── dashboard/
+│   ├── curriculum/
+│   ├── virtual_lab/
+│   └── profile/
+├── widgets/
+│   ├── common/
+│   ├── auth/
+│   ├── curriculum/
+│   └── virtual_lab/
+└── services/
+```
+
+Detailed Screen-by-Screen Flow
+
+1. Splash Screen (screens/splash/)
+
+```dart
+// screens/splash/splash_screen.dart
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _controller.forward();
+    
+    // Check authentication and navigate
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    await Future.delayed(Duration(seconds: 3));
+    
+    // Check if user is logged in
+    bool isLoggedIn = await AuthService.isUserLoggedIn();
+    
+    if (isLoggedIn) {
+      Navigator.pushReplacementNamed(context, '/dashboard');
+    } else {
+      Navigator.pushReplacementNamed(context, '/onboarding');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.primary,
+      body: Center(
+        child: FadeTransition(
+          opacity: _animation,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // App Logo
+              Image.asset(
+                'assets/images/logo.png',
+                width: 150,
+                height: 150,
+              ),
+              SizedBox(height: 20),
+              // App Name with Bengali support
+              Text(
+                'শিখো',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontFamily: 'BanglaFont',
+                ),
+              ),
+              Text(
+                'Shikho EdTech',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white70,
+                ),
+              ),
+              SizedBox(height: 30),
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+2. Onboarding Screens (screens/onboarding/)
+
+```dart
+// screens/onboarding/onboarding_screen.dart
+class OnboardingScreen extends StatefulWidget {
+  @override
+  _OnboardingScreenState createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  final List<OnboardingPage> _pages = [
+    OnboardingPage(
+      image: 'assets/onboarding/ai_lab.png',
+      title: 'ভার্চুয়াল AI & রোবোটিক্স ল্যাব',
+      description: 'ইন্টারেক্টিভ 3D ল্যাবে AI এবং রোবোটিক্স শিখুন',
+      bgColor: AppColors.primary,
+    ),
+    OnboardingPage(
+      image: 'assets/onboarding/curriculum.png',
+      title: 'বাংলাদেশ কারিকুলাম ভিত্তিক',
+      description: 'গ্রেড ৩-১০ এর জন্য বিশেষভাবে ডিজাইনকৃত',
+      bgColor: AppColors.secondary,
+    ),
+    OnboardingPage(
+      image: 'assets/onboarding/projects.png',
+      title: 'প্রাকটিক্যাল প্রোজেক্টস',
+      description: 'স্থানীয় মার্কেটের উপকরণ দিয়ে বাস্তব প্রোজেক্ট',
+      bgColor: AppColors.accent,
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          PageView.builder(
+            controller: _pageController,
+            itemCount: _pages.length,
+            onPageChanged: (int page) {
+              setState(() => _currentPage = page);
+            },
+            itemBuilder: (context, index) {
+              return OnboardingPageWidget(page: _pages[index]);
+            },
+          ),
+          
+          // Bottom Navigation
+          Positioned(
+            bottom: 50,
+            left: 20,
+            right: 20,
+            child: _buildBottomSection(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomSection() {
+    return Column(
+      children: [
+        // Page Indicators
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(_pages.length, (index) {
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 4),
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _currentPage == index ? AppColors.primary : Colors.grey,
+              ),
+            );
+          }),
+        ),
+        SizedBox(height: 30),
+        
+        // Get Started Button
+        if (_currentPage == _pages.length - 1)
+          PrimaryButton(
+            text: 'শুরু করুন',
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/auth');
+            },
+          )
+        else
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.pushReplacementNamed(context, '/auth'),
+                child: Text('স্কিপ করুন', style: TextStyle(color: Colors.grey)),
+              ),
+              FloatingActionButton(
+                onPressed: () => _pageController.nextPage(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeIn,
+                ),
+                child: Icon(Icons.arrow_forward),
+                backgroundColor: AppColors.primary,
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+}
+```
+
+3. Authentication Flow (screens/auth/)
+
+```dart
+// screens/auth/auth_selection_screen.dart
+class AuthSelectionScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('একাউন্ট তৈরি করুন'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            // Role Selection
+            Text(
+              'আপনি কে?',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 30),
+            
+            AuthRoleCard(
+              icon: Icons.school,
+              title: 'শিক্ষার্থী',
+              subtitle: 'গ্রেড ৩-১০ এর শিক্ষার্থী',
+              onTap: () => Navigator.pushNamed(context, '/student-signup'),
+            ),
+            
+            AuthRoleCard(
+              icon: Icons.people,
+              title: 'প্যারেন্ট',
+              subtitle: 'শিক্ষার্থীর অভিভাবক',
+              onTap: () => Navigator.pushNamed(context, '/parent-signup'),
+            ),
+            
+            AuthRoleCard(
+              icon: Icons.person,
+              title: 'শিক্ষক',
+              subtitle: 'স্কুল বা কোচিং সেন্টার',
+              onTap: () => Navigator.pushNamed(context, '/teacher-signup'),
+            ),
+            
+            Spacer(),
+            
+            // Already have account
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('ইতিমধ্যে একাউন্ট আছে?'),
+                TextButton(
+                  onPressed: () => Navigator.pushNamed(context, '/login'),
+                  child: Text('লগইন করুন'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// screens/auth/student_signup_screen.dart
+class StudentSignupScreen extends StatefulWidget {
+  @override
+  _StudentSignupScreenState createState() => _StudentSignupScreenState();
+}
+
+class _StudentSignupScreenState extends State<StudentSignupScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  
+  int _selectedGrade = 3;
+  String _selectedTrack = 'robotics';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('শিক্ষার্থী রেজিস্ট্রেশন')),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(20),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              // Profile Picture
+              ProfilePicturePicker(),
+              SizedBox(height: 20),
+              
+              // Name Field
+              CustomTextField(
+                controller: _nameController,
+                label: 'পূর্ণ নাম',
+                prefixIcon: Icons.person,
+                validator: (value) {
+                  if (value.isEmpty) return 'নাম লিখুন';
+                  return null;
+                },
+              ),
+              
+              // Email Field
+              CustomTextField(
+                controller: _emailController,
+                label: 'ইমেইল',
+                prefixIcon: Icons.email,
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value.isEmpty || !value.contains('@')) return 'সঠিক ইমেইল লিখুন';
+                  return null;
+                },
+              ),
+              
+              // Password Field
+              CustomTextField(
+                controller: _passwordController,
+                label: 'পাসওয়ার্ড',
+                prefixIcon: Icons.lock,
+                obscureText: true,
+                validator: (value) {
+                  if (value.length < 6) return 'পাসওয়ার্ড ৬ অক্ষরের বেশি হোক';
+                  return null;
+                },
+              ),
+              
+              // Grade Selection
+              SectionHeader(title: 'গ্রেড নির্বাচন করুন'),
+              GradeSelectionGrid(
+                selectedGrade: _selectedGrade,
+                onGradeSelected: (grade) => setState(() => _selectedGrade = grade),
+              ),
+              
+              // Track Selection
+              SectionHeader(title: 'ট্র্যাক নির্বাচন করুন'),
+              TrackSelectionCard(
+                title: 'রোবোটিক্স',
+                subtitle: 'হার্ডওয়্যার ও প্রোগ্রামিং',
+                icon: Icons.engineering,
+                isSelected: _selectedTrack == 'robotics',
+                onTap: () => setState(() => _selectedTrack = 'robotics'),
+              ),
+              
+              TrackSelectionCard(
+                title: 'আর্টিফিশিয়াল ইন্টেলিজেন্স',
+                subtitle: 'এআই ও মেশিন লার্নিং',
+                icon: Icons.psychology,
+                isSelected: _selectedTrack == 'ai',
+                onTap: () => setState(() => _selectedTrack = 'ai'),
+              ),
+              
+              SizedBox(height: 30),
+              
+              // Sign Up Button
+              PrimaryButton(
+                text: 'রেজিস্ট্রেশন সম্পন্ন করুন',
+                onPressed: _submitForm,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState.validate()) {
+      // Create user account
+      AuthService.signUpStudent(
+        name: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        grade: _selectedGrade,
+        track: _selectedTrack,
+      ).then((success) {
+        if (success) {
+          Navigator.pushReplacementNamed(context, '/dashboard');
+        }
+      });
+    }
+  }
+}
+```
+
+4. Main Dashboard (screens/dashboard/)
+
+```dart
+// screens/dashboard/dashboard_screen.dart
+class DashboardScreen extends StatefulWidget {
+  @override
+  _DashboardScreenState createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    HomeScreen(),
+    CurriculumScreen(),
+    VirtualLabScreen(),
+    ProjectHubScreen(),
+    ProfileScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'হোম',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book),
+            label: 'কারিকুলাম',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.science),
+            label: 'ভার্চুয়াল ল্যাব',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.workspaces),
+            label: 'প্রোজেক্টস',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'প্রোফাইল',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// screens/dashboard/home_screen.dart
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
+    
+    return Scaffold(
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('স্বাগতম, ${user.name}!', style: TextStyle(fontSize: 18)),
+            Text(
+              'গ্রেড ${user.grade} • ${user.track == 'robotics' ? 'রোবোটিক্স' : 'এআই'}',
+              style: TextStyle(fontSize: 12, color: Colors.white70),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(icon: Icon(Icons.notifications), onPressed: () {}),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Progress Overview
+            ProgressOverviewCard(),
+            SizedBox(height: 20),
+            
+            // Quick Actions
+            SectionHeader(title: 'দ্রুত এক্সেস'),
+            QuickActionGrid(),
+            SizedBox(height: 20),
+            
+            // Current Semester
+            SectionHeader(title: 'বর্তমান সেমিস্টার'),
+            CurrentSemesterCard(),
+            SizedBox(height: 20),
+            
+            // Recent Activities
+            SectionHeader(title: 'সাম্প্রতিক এক্টিভিটি'),
+            ActivityList(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+5. Virtual Lab (screens/virtual_lab/)
+
+```dart
+// screens/virtual_lab/virtual_lab_screen.dart
+class VirtualLabScreen extends StatefulWidget {
+  @override
+  _VirtualLabScreenState createState() => _VirtualLabScreenState();
+}
+
+class _VirtualLabScreenState extends State<VirtualLabScreen> {
+  int _selectedLab = 0; // 0: Circuits, 1: Robotics, 2: AI
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('ভার্চুয়াল ল্যাব'),
+        actions: [
+          IconButton(icon: Icon(Icons.help), onPressed: _showHelp),
+          IconButton(icon: Icon(Icons.share), onPressed: _shareProject),
+        ],
+      ),
+      body: Column(
+        children: [
+          // Lab Type Selector
+          LabTypeSelector(
+            selectedIndex: _selectedLab,
+            onTabChanged: (index) => setState(() => _selectedLab = index),
+          ),
+          
+          // Lab Workspace
+          Expanded(
+            child: IndexedStack(
+              index: _selectedLab,
+              children: [
+                CircuitLab(),      // Tinkercad-inspired circuit simulator
+                RoboticsLab(),     // 3D robotics assembly
+                AILab(),          // Neural network builder
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// screens/virtual_lab/circuit_lab.dart
+class CircuitLab extends StatefulWidget {
+  @override
+  _CircuitLabState createState() => _CircuitLabState();
+}
+
+class _CircuitLabState extends State<CircuitLab> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        // Component Palette
+        Container(
+          width: 200,
+          child: ComponentPalette(),
+        ),
+        
+        // Main Workspace
+        Expanded(
+          child: CircuitWorkspace(),
+        ),
+        
+        // Properties Panel
+        Container(
+          width: 250,
+          child: PropertiesPanel(),
+        ),
+      ],
+    );
+  }
+}
+```
+
+Key Widgets Structure
+
+Common Widgets (widgets/common/)
+
+```dart
+// widgets/common/primary_button.dart
+class PrimaryButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+  final bool isLoading;
+
+  const PrimaryButton({Key key, this.text, this.onPressed, this.isLoading = false}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: isLoading ? null : onPressed,
+        child: isLoading 
+            ? CircularProgressIndicator(color: Colors.white)
+            : Text(text, style: TextStyle(fontSize: 16)),
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(vertical: 15),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+      ),
+    );
+  }
+}
+
+// widgets/common/section_header.dart
+class SectionHeader extends StatelessWidget {
+  final String title;
+  final String actionText;
+  final VoidCallback onAction;
+
+  const SectionHeader({Key key, this.title, this.actionText, this.onAction}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        if (actionText != null)
+          TextButton(
+            onPressed: onAction,
+            child: Text(actionText),
+          ),
+      ],
+    );
+  }
+}
+```
+
+Navigation Setup (main.dart)
+
+```dart
+// main.dart
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => CurriculumProvider()),
+        ChangeNotifierProvider(create: (_) => VirtualLabProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Shikho EdTech',
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        initialRoute: '/splash',
+        routes: {
+          '/splash': (context) => SplashScreen(),
+          '/onboarding': (context) => OnboardingScreen(),
+          '/auth': (context) => AuthSelectionScreen(),
+          '/student-signup': (context) => StudentSignupScreen(),
+          '/login': (context) => LoginScreen(),
+          '/dashboard': (context) => DashboardScreen(),
+          '/curriculum': (context) => CurriculumScreen(),
+          '/virtual-lab': (context) => VirtualLabScreen(),
+          '/projects': (context) => ProjectHubScreen(),
+          '/profile': (context) => ProfileScreen(),
+        },
+        supportedLocales: [
+          Locale('en', 'US'),
+          Locale('bn', 'BD'),
+        ],
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        
