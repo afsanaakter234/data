@@ -1,0 +1,78 @@
+# Curriculum
+
+# Curriculum Philosophy
+
+- **Hands-On First, Theory Second:** Each topic starts with a tangible problem or interactive simulation. Theory and math are introduced as essential tools to understand why something works, not as abstract concepts.
+- **Spiral Curriculum:** Concepts are revisited at increasing levels of depth and complexity each year.
+- **Bangladeshi Context:** Projects and examples are rooted in local scenarios, challenges, and available components.
+- **Semester Structure:** Each academic year has two semesters. A student could take one track per semester or follow one track for the entire year, depending on school resources and student interest.
+
+---
+
+# Robotics Track Curriculum (Semester-Based)
+
+This track focuses on mechatronics: physical systems, electronics, and programming for control.
+
+## Foundational Stage (Grades 3-5)
+
+Goal: Introduce physical computing and the joy of building. Focus on cause-and-effect, basic logic, and simple mechanics.
+
+| **Grade** | **Semester** | **Core Topics** | **Hands-On Projects (Virtual & Physical)** | **Essential Theory & Math** |
+| --- | --- | --- | --- | --- |
+| 3 | 1 | What is a Robot? Sensors vs. Actuators, Simple Circuits. | Virtual: Build a circuit with a battery, switch, and LED in the 3D lab. Physical: Assemble a simple "Art Bot" (vibrating motor, battery, markers) on a cup. | Concepts of open/closed circuits. Basic energy transfer. |
+| 3 | 2 | Introduction to Programming Logic: Sequences, Events. | Virtual: Use block-based coding to command a virtual robot to move in a square. Physical: Program a simple robot (like mBot) to follow a drawn path using block coding. | Sequential logic. Understanding commands and delays. |
+| 4 | 1 | Mechanical Systems I: Gears, Levers, Pulleys. | Virtual: Simulate gear trains to lift different weights. Physical: Build a manual crane or a simple lever-based catapult using kits or local materials. | Ratio and proportion (gear ratios). Basic principles of force and motion. |
+| 4 | 2 | Sensing the Environment: Touch, Light, Sound Sensors. | Virtual: Program a virtual "smart streetlight" that turns on when it gets dark. Physical: Build and code a robot that changes direction when it hits an obstacle (touch sensor). | If-Then conditional logic. Understanding analog vs. digital signals (basic). |
+| 5 | 1 | Motion and Control: DC Motors, Servo Motors. | Virtual: Simulate and code a robotic arm with servos to pick up an object. Physical: Build a simple wheeled robot and code it to navigate a simple maze. | Concepts of rotation, angle, and speed. Pulse Width Modulation (PWM) conceptually. |
+| 5 | 2 | Integrated Project: "The Smart Village Model" | Virtual: Design a system with a light-activated water pump and a gate opener. Physical: Build a model village with a robot that automatically turns on a light (LED) and a fan (motor) using a light sensor. | Systems thinking. Integration of sensors and actuators. |
+
+## Intermediate Stage (Grades 6-8)
+
+Goal: Deepen understanding of electronics and programming. Introduce microcontrollers and more complex systems.
+
+| **Grade** | **Semester** | **Core Topics** | **Hands-On Projects (Virtual & Physical)** | **Essential Theory & Math** |
+| --- | --- | --- | --- | --- |
+| 6 | 1 | The Brain: Microcontrollers (Arduino Basics). Inputs/Outputs, Digital/Analog Pins. | Virtual: Wire and code a virtual Arduino to read a potentiometer and control LED brightness. Physical: Build a working night light with an LDR (Light Dependent Resistor) and LED using a real Arduino. | Voltage, Current, Resistance (Ohm's Law conceptually). Binary states (HIGH/LOW). |
+| 6 | 2 | Robotic Movement: Locomotion, Wheel Types, Kinematics. | Virtual: Design and simulate different robot chassis (2-wheel, 4-wheel, tank treads). Physical: Build a line-following robot using IR sensors. | Coordinate systems (X, Y plane). Speed = Distance/Time. |
+| 7 | 1 | Electronics Fundamentals: Circuit Design, Sensors Deep Dive (Ultrasonic, IR). | Virtual: Use a circuit simulation to design a sensor array for an obstacle-avoidance robot. Physical: Build and code an obstacle-avoidance robot using an ultrasonic sensor. | Reading circuit diagrams. Understanding sensor data sheets (range, accuracy). |
+| 7 | 2 | Communication Protocols: Wired (I2C, SPI) and Wireless (Bluetooth). | Virtual: Simulate two microcontrollers talking to each other via I2C to share sensor data. Physical: Control a robot's movement via a smartphone app using Bluetooth. | Data packets, addresses, master/slave communication concepts. |
+| 8 | 1 | Advanced Mechanics & Actuators: Pneumatics, Hydraulics (conceptual), Stepper Motors. | Virtual: Simulate a 3-DOF (Degree of Freedom) robotic arm for a specific task (e.g., sorting). Physical: Build a precise, programmable XY-plotter or a 3D printer extruder assembly using stepper motors. | Torque, force, degrees of freedom. Precision and repeatability. |
+| 8 | 2 | Capstone Project: "The Bangladeshi Problem Solver" | Project Choice: e.g., Automated Paddy Sorting Machine, Smart Bin that signals when full, River Water Level Monitor. | Project management, documentation, and troubleshooting. |
+
+---
+
+# AI Track Curriculum (Semester-Based)
+
+This track focuses on data, algorithms, and intelligence: how machines learn from data to make decisions and predictions.
+
+## Foundational Stage (Grades 3-5)
+
+Goal: Demystify AI. Introduce concepts of data, patterns, and decision-making through games and interactive activities.
+
+| **Grade** | **Semester** | **Core Topics** | **Hands-On Projects (Virtual & Physical)** | **Essential Theory & Math** |
+| --- | --- | --- | --- | --- |
+| 3 | 1 | What is Intelligence? Human vs. Machine Intelligence. Patterns. | Virtual: Play pattern recognition games (what comes next in the sequence?). Physical: Sort different types of local beans/lentils by size/color; discuss how you decided. | Recognizing shapes, colors, and sequences. Basic categorization. |
+| 3 | 2 | Introduction to Data: What is data? Collecting and organizing data. | Virtual: Use a simple tool to graph the class's favorite Bangladeshi fruits. Physical: Conduct a survey on traffic near the school and create a bar chart. | Data tables, bar graphs, pictographs. |
+| 4 | 1 | Sensing the World (Computer Vision I): How computers "see" images. | Virtual: Use a simple webcam tool to track colored objects on the screen. Physical: Use a tablet app to scan and identify different pre-defined shapes. | Pixels and colors (RGB values at a basic level). |
+| 4 | 2 | Making Decisions (Rule-Based Systems). | Virtual: Create a "Chatbot" that answers questions about Bangladeshi festivals using simple if-then rules. Physical: Design a flowchart for a "Smart Home" that turns on fans if the temperature is above 30°C. | Logical reasoning, flowcharts, decision trees. |
+| 5 | 1 | Learning from Examples (ML Concepts): Supervised Learning. | Virtual: Train a simple image classifier to distinguish between images of "Rickshaws" and "CNGs". Physical: Collect images of mango and jackfruit leaves to create a dataset for the virtual lab. | Concepts of training, testing, and labels. |
+| 5 | 2 | AI for Good: Project on a local issue. | Virtual: Design a concept for an AI system that could help farmers identify common crop diseases from leaf images. Physical: Present the concept with a poster. | Ethical thinking: How can AI help our community? |
+
+## Intermediate Stage (Grades 6-8)
+
+Goal: Introduce the core algorithms and mathematical concepts behind AI, using the virtual lab to visualize abstract ideas.
+
+| **Grade** | **Semester** | **Core Topics** | **Hands-On Projects (Virtual & Physical)** | **Essential Theory & Math** |
+| --- | --- | --- | --- | --- |
+| 6 | 1 | The Math Behind AI I: Linear Relationships, Coordinates. | Virtual: In the lab, adjust the slope and intercept of a line to fit a set of (x,y) points representing, e.g., study hours vs. test scores. Physical: Plot real data on graph paper and draw a line of best fit. | Cartesian coordinates, slope-intercept form (y=mx+c). |
+| 6 | 2 | Introduction to Neural Networks: Neurons as decision units. | Virtual: Drag and drop virtual "neurons" to create a network that decides if a student should play outside (based on rain, homework). Physical: Act out a neural network with students as neurons passing messages. | Basic graph theory (nodes and connections). Weights and thresholds. |
+| 7 | 1 | Core AI Algorithms I: Regression and Classification. | Virtual: Use a regression model in the lab to predict the price of rice based on seasonal data. Train a classifier to recognize Bengali handwritten digits. Physical: Collect data (e.g., height vs. arm span) and use a simple tool to find the correlation. | Mean, Median, Mode. Concept of error (difference between prediction and reality). |
+| 7 | 2 | Natural Language Processing (NLP) I: Text as Data. | Virtual: Build a simple sentiment analyzer for Bengali sentences (positive/negative) using word lists. Physical: Analyze the lyrics of a popular Bengali song for word frequency. | Tokenization, word frequencies. Basic linguistics. |
+| 8 | 1 | Core AI Algorithms II: Clustering (Unsupervised Learning). | Virtual: Use a clustering algorithm to group different districts of Bangladesh based on climate data (rainfall, temperature). Physical: Group a collection of different leaves without any labels, explaining the grouping criteria. | Distance metrics (conceptual). The idea of finding natural groups in data. |
+| 8 | 2 | Capstone Project: "AI for Bangladesh" | Project Choice: e.g., Train a model to classify local bird sounds, Create a chatbot that answers questions about Bangladeshi history, Analyze social media trends during a national event. | Model evaluation metrics (accuracy). The importance of good data quality. |
+
+---
+
+# Advanced Stage (Grades 9-10)
+
+Goal: Specialization and integration. Students choose a track for in-depth study, tackling complex projects that may combine AI and Robotics.
